@@ -16,7 +16,7 @@ server.listen(3000, function() {
 const Serialport = require('serialport');
 const Readline = Serialport.parsers.Readline;
 
-const port = new Serialport('COM1',{
+const port = new Serialport('COM4',{
     baudRate: 9600,
 });
 
@@ -29,16 +29,28 @@ parser.on('open', function () {
 parser.on('data', function (data){
     console.log(data)
     datos = data.split(':');
-    if(datos[0] == 'PH'){
-        io.emit('PH', datos[1]);
-    }
-    else{
-        if(datos[0] == 'Temperatura'){
+    switch (datos[0]) {
+        case 'PH':
+            io.emit('PH', datos[1]);
+            break;
+        case 'Temperatura':
             io.emit('temp', datos[1]);
-        }
+            break;
+        case 'Motor':
+            io.emit('Motor', datos[1]);
+            break;
+        default:
+            break;
     }
 })
 
 port.on('error', function(err) {
     console.log(err);
 });
+
+// SEND DATA AT SERIAL PORT
+io.on('connection', (socket)=>{
+    socket.on('motor-on-off', (msg) => {
+        port.write(msg+'\n');
+    })
+})

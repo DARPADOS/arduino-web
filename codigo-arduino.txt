@@ -1,0 +1,183 @@
+#define PinMotor 3
+/////////////////////////// Allaucca Paucar, Juan Jose ///////////////////////
+////////////////////////////////// LCD //////////////////////////////////
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(8,9,4,5,6,7);
+////////////////////////////////// DS18B20 //////////////////////////////////
+#include <OneWire.h>
+#include <DallasTemperature.h>
+OneWire oneWire_in(2);
+DallasTemperature DS18B20(&oneWire_in);
+/////////////////////////////////////////////////////////////////////////////
+float calibration_value = 22.34;
+unsigned long int avgval;
+int buffer_arr[10], temp;
+
+float PHfinal=0;
+byte Muestras=10;
+byte Var=0;
+float Temperatura;
+boolean Motor=false;
+int AnalogA0;
+void setup()
+{
+  Serial.begin(9600);
+  Serial.setTimeout(10);
+  pinMode(PinMotor,OUTPUT);
+  
+  analogWrite(PinMotor, 0);
+  
+  //digitalWrite(PinMotor,LOW);
+  lcd.begin(16,2);
+  delay(10);
+  lcd.setCursor(0,0);
+  lcd.print("Mot:OFF  PH:0.00");
+  delay(10);
+  lcd.setCursor(0,1);
+  lcd.print("Temperatura:00.0");
+  delay(10);
+  DS18B20.begin();
+  delay(10);
+  Serial.print("Listo");
+}
+void loop() 
+{
+  ExtraePH();
+  ExtraeTemp();
+  ImprimeLCD();
+
+}
+
+void ExtraePH()
+{
+  PHfinal=0;
+  while(1)
+  {
+    for (int i = 0; i < 10; i++)
+    {
+      buffer_arr[i] = analogRead(A1);
+      delay(30);
+      LeePulso();
+    }
+    for (int i = 0; i < 9; i++)
+    {
+      for (int j = i + 1; j < 10; j++)
+      {
+        if (buffer_arr[i] > buffer_arr[j])
+        {
+          temp = buffer_arr[i];
+          buffer_arr[i] = buffer_arr[j];
+          buffer_arr[j] = temp;
+        }
+      }
+    }
+    avgval = 0;
+    for (int i = 2; i < 8; i++)
+    avgval += buffer_arr[i];
+    float volt = (float)avgval * 5.0 / 1024 / 6;
+    float ph_act = -5.70 * volt + calibration_value;
+    if(Var==Muestras)
+    {
+      PHfinal=PHfinal/Muestras;
+      Serial.print("PH:");
+      Serial.println(PHfinal);
+      Var=0;
+      return;
+    }
+    else
+    {
+      PHfinal=PHfinal+ph_act;
+      Var++;
+    }
+    delay(100);
+  }
+}
+void ExtraeTemp()
+{
+  DS18B20.requestTemperatures();
+  Temperatura = DS18B20.getTempCByIndex(0);
+  Serial.print("Temperatura:");
+  Serial.println(Temperatura,2);
+}
+void ImprimeLCD()
+{
+  lcd.setCursor(12,0);
+  lcd.print(PHfinal,2);
+  delay(10);
+  lcd.setCursor(12,1);
+  lcd.print(Temperatura,1);
+}
+void LeePulso()
+{
+  AnalogA0=analogRead(A0);
+  //Serial.println(AnalogA0);
+
+    if(AnalogA0>634 && AnalogA0<644)
+    {
+      lcd.setCursor(4,0);
+      if(Motor ==false){
+        analogWrite(PinMotor,255);
+        lcd.print("ON-1");
+        Motor=true;
+      }
+      else {
+        analogWrite(PinMotor,0);
+        lcd.print("OFF");
+        Motor=false;
+      }
+      delay(50);
+    }
+  /*
+  if(Motor==false)
+  {
+    if(AnalogA0>634 && AnalogA0<644)
+    {
+      digitalWrite(PinMotor,!digitalRead(PinMotor));
+      lcd.setCursor(4,0);
+      if(digitalRead(PinMotor)==HIGH)
+      lcd.print("ON ");
+      else 
+      lcd.print("OFF");
+      Motor=true;
+      delay(50);
+    }
+  }
+  else
+  {
+    if(AnalogA0>1018)
+    {
+      Motor=false;
+      delay(50);
+    }
+  }*/
+}
+
+void serialEvent(){
+    if (Serial.available()){
+        String msgReceived = Serial.readStringUntil('\n');
+        elegirModo(msgReceived);
+    }
+}
+
+void elegirModo(String msg){
+    lcd.setCursor(4,0);
+    if(msg == "Motor:1"){ 
+      analogWrite(PinMotor,255);
+      lcd.print("ON-1");
+      Motor=true;
+    }
+    else{
+        if(msg == "Motor:2"){
+            analogWrite(PinMotor,127);
+            lcd.print("ON-2");
+            Motor=true;
+        }
+        else{
+            if(msg == "Motor:OFF"){
+            analogWrite(PinMotor,0);
+            lcd.print("OFF");
+            Motor=false;
+            }
+        }
+    }
+}
