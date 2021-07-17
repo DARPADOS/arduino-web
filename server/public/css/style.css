@@ -103,3 +103,17 @@ h1, h2, h3, h4, h5, h6 {
     left: 51px;
 }
 /*End | On-Off Button Design*/
+
+@media (min-width: 768px){
+    .container, .container-md, .container-sm {
+        min-width: 770px;
+    }
+}
+
+.alerta {
+    background-color: #af4c4c;
+}
+
+.optimo {
+    background-color: #4caf50;
+}

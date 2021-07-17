@@ -13,15 +13,120 @@
     <main class="container-fluid my-auto content text-center" style="background-color: white;">
         <div class="row">
             <div class="col-5 text-start">
-                <img class="pt-2" src="img/Group 1.svg" alt="">
+                <img class="pt-2" src="img/Group 1.svg" style="height: 90px;">
             </div>
             <div class="col text-end pt-4 pe-5">
-                <h3>Juan Jose Allaucca Paucar</h3>
+                <h4>Juan Jose Allaucca Paucar</h3>
             </div>
         </div>
-        <div class="row"">
-            <h1>BIOREACTOR</h1>
+        <div class="row pb-4"">
+            <h2>BIOREACTOR</h2>
         </div>
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 gx-3 gy-3">
+                <!-- TEMPERATURA -->
+                <div class="col">
+                    <div class="card text-center card-sensor">
+                        <div class="card-header h4">
+                            Temperatura
+                        </div>
+                        <div class="card-body">
+                            <h2 id = "temperature" class="display-2">25.85</h2>
+                        </div>
+                        <div class="card-footer optimo text-white" id="temp-div">
+                            <h5 id="temp-valid">Optimo</h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- NIVEL DE PH -->
+                <div class="col">
+                    <div class="card text-center card-sensor">
+                        <div class="card-header h4">
+                            Nivel de PH
+                        </div>
+                        <div class="card-body">
+                            <h2 id = "ph-level" class="display-2">7.35</h2>
+                        </div>
+                        <div class="card-footer optimo text-white" id="ph-div">
+                            <h5 id="ph-valid">Optimo</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MOTOR -->
+                <div class="col">
+                    <div class="card text-center card-sensor" style="min-height: 176px;">
+                        <div class="card-header">
+                            <h4>Motor </h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="container-motor my-3">
+                                <label class="btn-onoff mb-3">
+                                    <input type="checkbox" name="name" data-onoff="toggle"><span></span>	
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-footer alerta text-white" id="motor-div">
+                            <h5 id="result">Apagado</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card text-center card-sensor">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col text-end">
+                                    <h4>Microorganismo</h4>
+                                </div>
+                                <div class="col d-flex">
+                                    <select name="slct" id="select" class="select px-3">
+                                        <option value="1" selected>Escherichia coli</option>
+                                        <option value="2">Bacillus cereus</option>
+                                    </select>
+                                </div>                       
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-start">Condiciones Optimas:</h5>
+                            
+                            <!-- #TABLA -->
+
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Límite inferior</th>
+                                    <th scope="col">Optimo</th>
+                                    <th scope="col">Límite superior</th>
+                                  </tr>
+                                </thead>
+                                <tbody id="condiciones">
+                                    <tr>
+                                        <th scope="row">Temperatura (°C)</th>
+                                        <td class="table-danger">36.5</td>
+                                        <td class="table-success">37</td>
+                                        <td class="table-danger">37.5</td>
+                                    </tr>
+                                        <tr>
+                                        <th scope="row">Nivel de PH</th>
+                                        <td class="table-danger">6.50</td>
+                                        <td class="table-success">7.00</td>
+                                        <td class="table-danger">7.50</td>
+                                    </tr>
+                                        <tr>
+                                        <th scope="row">Agitación (RPM)</th>
+                                        <td class="table-success" colspan="3">100</td>
+                                    </tr>
+                                </tbody>
+                              </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+        <!--
         <div class="row align-items-center mt-5">
             <div class="col-2"></div>
             <div class="col-3">
@@ -51,7 +156,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="container-motor mt-3">
+                    <div class="container-motor my-3">
                         <label class="btn-onoff mb-3">
                             <input type="checkbox" name="name" data-onoff="toggle"><span></span>	
                         </label>
@@ -60,7 +165,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </main>
 
     <!--<main class="container-fluid" style="background-color: seagreen; height: 100vh;">
